@@ -2,7 +2,7 @@ from django.shortcuts import render, get_object_or_404
 from .models import *
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 
-
+from django.http import HttpResponse
 
 def home(request):
     product = Product.objects.filter(is_active=True)
@@ -55,3 +55,23 @@ def product_detail(request, category_id, id):
     }
 
     return render(request, 'product_detail.html', context)
+
+
+def search(request):
+    category = Category.objects.all()
+
+
+
+    if 'keyword' in request.GET:
+        keyword = request.GET['keyword']
+        if keyword:
+            product = Product.objects.filter(name__icontains=keyword)
+            product_count = product.count()
+    
+    context = {
+        'product':product,
+        'product_count': product_count,
+        'category':category,
+
+    }
+    return render(request, 'store.html', context)
