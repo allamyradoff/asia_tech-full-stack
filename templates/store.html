@@ -150,9 +150,9 @@
                                     <a href="{% url 'product_detail' i.id  i.category.id %}"
                                         class="title">{{i.name}}</a>
                                     <div class="price-wrap mt-2">
-                                        <span class="price">${{i.stock}}</span>
+                                        <span class="price">${{i.price}}</span>
                                         {% if i.price %}
-                                        <del class="price-old">${{i.price}}</del>
+                                        <p class="price-old">Осталось {{i.stock}}</p>
                                         {%endif %}
                                     </div> <!-- price-wrap.// -->
                                 </div>

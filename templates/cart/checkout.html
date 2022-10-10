@@ -15,7 +15,8 @@
                         <h4 class="cart-title mb-4">
                             Billing Address
                         </h4>
-                        <form action="">
+                        <form action="{% url 'place_order' %}" method="POST">
+                            {% csrf_token %}
                             <div class="form-row">
                                 <div class="col form-group">
                                     <label for="">First name</label>
@@ -43,7 +44,7 @@
                             <div class="form-row">
                                 <div class="col form-group">
                                     <label for="">Address Line 1</label>
-                                    <input type="email" name="address_line_1" id="" class="form-control" required>
+                                    <input type="text" name="address_line_1" id="" class="form-control" required>
                                 </div>
                                 <div class="col form-group">
                                     <label for="">Address Line 2</label>
@@ -55,7 +56,7 @@
                             <div class="form-row">
                                 <div class="col form-group">
                                     <label for="">City</label>
-                                    <input type="email" name="city" id="" class="form-control" required>
+                                    <input type="text" name="city" id="" class="form-control" required>
                                 </div>
                                 <div class="col form-group">
                                     <label for="">State</label>
@@ -119,7 +120,7 @@
                                         </div> <!-- price-wrap .// -->
                                     </td>
                                     <td class="text-right">
-                                        <a href="{% url 'delete_cart' i.product.id %}" class="btn btn-danger">
+                                        <a href="{% url 'delete_cart' i.product.id i.id %}" class="btn btn-danger">
                                             Remove</a>
                                     </td>
                                 </tr>
@@ -141,4 +142,8 @@
 
     </div>
 </section>
+
+
+
+
 {% endblock %}

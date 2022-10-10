@@ -1,8 +1,11 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from .models import *
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 
 from django.http import HttpResponse
+from .forms import ReviewForm
+from django.contrib import messages
+
 
 def home(request):
     product = Product.objects.filter(is_active=True)
@@ -48,7 +51,6 @@ def store(request, id):
 
 def product_detail(request, category_id, id):
     product = Product.objects.get(id=id)
-    print(product)
 
     context = {
         'product': product
@@ -75,3 +77,32 @@ def search(request):
 
     }
     return render(request, 'store.html', context)
+
+
+
+def submit_review(request, product_id):
+    # url = request.META.get('HTTP_REFERER')
+    if request.method == "POST":
+        try:
+            review = ReviewRating.objects.get(user__id=request.user.id, product__id=product_id)
+            form = ReviewForm(request.POST, instance=review)
+            form.save()
+            messages.success(request, "Спасиба за отзыв, Ваш отзый обнавлен")
+            return redirect('store')
+
+
+        except ReviewRating.DoesNotExist:
+            form = ReviewForm(request.POST)
+            if form.is_valid:
+                data= ReviewRating()
+                print(data)
+                data.subject = form.cleaned_data['subject']
+                data.rating = form.cleaned_data['rating']
+                data.review = form.cleaned_data['review']
+                data.ip = request.META.get('REMOTE_ADDR')
+                data.product_id = product_id
+                data.user_id = request.user.id
+                data.save()
+
+                messages.success(request, 'Спасиба за ваш отзый')
+                return redirect('store')

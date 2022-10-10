@@ -75,12 +75,45 @@
         <div class="row">
             <div class="col-md-9">
 
+                
+                <form action="{% url 'submit_review' product.id %}">
+                    {% csrf_token %}
+
+                    <h5>Напишите свой отзыв</h5>
+                    <label > Какой рейтинг он удостоин вами</label>
+                    <div class="rate">
+                        <input type="radio" name="rating" id="rating10" value="5" required><label for="ratinf10" title="5">5</label>
+                        <input type="radio" name="rating" id="rating9" value="4.5" required><label for="ratinf9" title="4.5" class="half">4.5</label>
+                        <input type="radio" name="rating" id="rating8" value="4" required><label for="ratinf8" title="4">4</label>
+                        <input type="radio" name="rating" id="rating7" value="3.5" required><label for="ratinf7" title="3.5" class="half">3.5</label>
+                        <input type="radio" name="rating" id="rating6" value="3" required><label for="ratinf6" title="3">3</label>
+                        <input type="radio" name="rating" id="rating5" value="2.5" required><label for="ratinf5" title="2.5" class="half">2.5</label>
+                        <input type="radio" name="rating" id="rating4" value="2" required><label for="ratinf4" title="2" >2</label>
+                        <input type="radio" name="rating" id="rating3" value="1.5" required><label for="ratinf3" title="1.5" class="half">1.5</label>
+                        <input type="radio" name="rating" id="rating2" value="1" required><label for="ratinf2" title="1">1</label>
+                        <input type="radio" name="rating" id="rating1" value="0.5" required><label for="ratinf1" title="0.5" class="half">0.5</label>
+                    </div>
+                    <div>
+                        title
+                        <input type="text" class="form-control" name="subject" id="">
+                        <br>
+                        <textarea name="review" class="form-control" rows="10"></textarea>
+                        <br>
+                        {%if user.is_authenticated %}
+                        <input type="submit" value="Submit Review" class="btn btn-primary">
+                        {% else %}
+                        <p>Пожадоста авторизуйтесь</p>
+                        {% endif %}
+                        <br>
+                    </div>
+                </form>
+                <br>
+
                 <header class="section-heading">
                     <h3>
                         Отзывы клиентов </h3>
 
                 </header>
-
                 <article class="box mb-3">
                     <div class="icontext w-100">
                         <img src="{% static './images/avatars/avatar1.jpg' %}" class="img-xs icon rounded-circle">
