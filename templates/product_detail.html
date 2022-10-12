@@ -76,7 +76,7 @@
             <div class="col-md-9">
 
                 
-                <form action="{% url 'submit_review' product.id %}">
+                <form action="{% url 'submit_review' product.id %}" method="POST">
                     {% csrf_token %}
 
                     <h5>Напишите свой отзыв</h5>
@@ -99,10 +99,14 @@
                         <br>
                         <textarea name="review" class="form-control" rows="10"></textarea>
                         <br>
-                        {%if user.is_authenticated %}
-                        <input type="submit" value="Submit Review" class="btn btn-primary">
+                        {% if user.is_authenticated %}
+                            {% if orderproduct %}
+                                <input type="submit" value="Submit Review" class="btn btn-primary">
+                            {% else %}
+                                <p> Bы должны приобрести этот продукт, чтобы опубликовать отзыв</p>
+                            {% endif %}
                         {% else %}
-                        <p>Пожадоста авторизуйтесь</p>
+                        <p>Пожаlоста авторизуйтесь</p>
                         {% endif %}
                         <br>
                     </div>
@@ -114,23 +118,24 @@
                         Отзывы клиентов </h3>
 
                 </header>
+                {% for i in reviews %}
                 <article class="box mb-3">
                     <div class="icontext w-100">
                         <img src="{% static './images/avatars/avatar1.jpg' %}" class="img-xs icon rounded-circle">
                         <div class="text">
-                            <span class="date text-muted float-md-right">24.04.2020 </span>
-                            <h6 class="mb-1">Mike John </h6>
+                            <span class="date text-muted float-md-right">{{i.updated_at}} </span>
+                            <h6 class="mb-1">{{i.user.first_name}}</h6>
 
                         </div>
                     </div> <!-- icontext.// -->
                     <div class="mt-3">
+                        <h6>{{i.subject}}</h6>
                         <p>
-                            Dummy comment Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-                            tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-                            quis nostrud exercitation ullamco laboris nisi ut aliquip
+                            {{i.review}}
                         </p>
                     </div>
                 </article>
+                {% endfor %}
 
 
 

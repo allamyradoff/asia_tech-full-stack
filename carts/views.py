@@ -77,7 +77,7 @@ def cart(request, total=0, quantity=0, cart_items=None):
             total += (cart_item.product.price * cart_item.quantity)
             quantity += cart_item.quantity
 
-    except ObjectNotExist:
+    except ObjectDoesNotExist:
         pass
 
     context = {

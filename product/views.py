@@ -5,6 +5,7 @@ from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 from django.http import HttpResponse
 from .forms import ReviewForm
 from django.contrib import messages
+from orders.models import OrderProduct
 
 
 def home(request):
@@ -52,8 +53,15 @@ def store(request, id):
 def product_detail(request, category_id, id):
     product = Product.objects.get(id=id)
 
+    orderproduct = OrderProduct.objects.filter(user=request.user, product_id=product.id).exists()
+
+    reviews = ReviewRating.objects.filter(product_id=product.id, status=True)
+
     context = {
-        'product': product
+        'product': product,
+        'orderproduct':orderproduct,
+        'reviews': reviews
+
     }
 
     return render(request, 'product_detail.html', context)
@@ -81,21 +89,20 @@ def search(request):
 
 
 def submit_review(request, product_id):
-    # url = request.META.get('HTTP_REFERER')
+    url = request.META.get('HTTP_REFERER')
     if request.method == "POST":
         try:
             review = ReviewRating.objects.get(user__id=request.user.id, product__id=product_id)
             form = ReviewForm(request.POST, instance=review)
             form.save()
             messages.success(request, "Спасиба за отзыв, Ваш отзый обнавлен")
-            return redirect('store')
+            return redirect(url)
 
 
         except ReviewRating.DoesNotExist:
             form = ReviewForm(request.POST)
-            if form.is_valid:
+            if form.is_valid():
                 data= ReviewRating()
-                print(data)
                 data.subject = form.cleaned_data['subject']
                 data.rating = form.cleaned_data['rating']
                 data.review = form.cleaned_data['review']
@@ -105,4 +112,4 @@ def submit_review(request, product_id):
                 data.save()
 
                 messages.success(request, 'Спасиба за ваш отзый')
-                return redirect('store')
+                return redirect(url)
